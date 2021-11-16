@@ -1,5 +1,6 @@
 from tabulate import tabulate
 
+
 def format_solutions(res):
 
     rows = []
