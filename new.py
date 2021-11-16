@@ -4,10 +4,12 @@ import copy
 from concurrent import futures
 import requests
 from timeit import default_timer as timer
+from filters import *
+from format_solutions import format_solutions
 
 def solutions_5(response):
     response_json = response.json()
-    wanted_keys = ['origin', 'destination', 'departuretime', 'minprice', 'duration', 'changesno', 'saleable']
+    wanted_keys = ['origin', 'destination', 'departuretime', 'minprice', 'duration', 'changesno', 'saleable', 'trainlist']
     result_list = []
     for x in response_json:
         t = x['departuretime']
@@ -62,7 +64,7 @@ payload = {
     'offset': '0'
 }
 start = timer()
-a = generate_payloads(payload, '28/11/2021')
+a = generate_payloads(payload, '10/12/2021')
 s = requests.Session()
 pool = futures.ThreadPoolExecutor(max_workers=20)
 results = []
@@ -70,6 +72,7 @@ for res in pool.map(lambda p: solutions_one_day(p, s), a):
     results.append(res)
 end = timer() - start
 print(end)
-print(results)
+b = filter_results_by_params(results, 25, 0, 'IC')
+format_solutions(b)
 
 #print(a)
